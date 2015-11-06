@@ -69,18 +69,8 @@ mapcat vector
 ;#42
 #(apply * (range 1 (inc %)))
 
-;#43
-#(apply map vector (partition %2 %))
-
-;#44
-#(let [k (mod % (count %2))]
-  (concat (drop k %2) (take k %2)))
-
 ;#45
 [1 4 7 10 13]
-
-;#46
-#(fn [x y] (% y x))
 
 ;#47
 4
@@ -90,6 +80,3 @@ mapcat vector
 
 ;#49
 (juxt take drop)
-
-;#50
-#(vals (group-by class %))
