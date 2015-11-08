@@ -143,3 +143,67 @@ mapcat vector
   (let [gcd #(if (= 0 %2) %1 (recur %2 (mod %1 %2)))
         lcm #(/ (* %1 %2) (gcd %1 %2))]
     (reduce lcm xs)))
+
+;#107
+#(fn [x] (int (Math/pow x %)))
+
+;#118
+(fn -map [f [x & xs]]
+  (if x
+    (cons (f x)
+      (lazy-seq (-map f xs)))
+    ()))
+
+;#120
+(fn [xs]
+  (letfn [(f [x]
+            (< x (->> x str (map (comp #(* % %) read-string str)) (apply +))))]
+    (->> (map f xs) (remove false?) count)))
+
+;#122
+(fn [b] (->> b seq (map {\0 0, \1 1}) (reduce #(+ (* % 2) %2))))
+
+;#126
+java.lang.Class
+
+;#128
+#(let
+   [[_s _r] %
+    s ({\S :spade, \H :heart, \D :diamond, \C :club} _s)
+    r ((zipmap "23456789TJQKA" (range 13)) _r)]
+  {:suit s :rank r})
+
+;#135
+(fn [x & xs]
+  (reduce #((first %2) % (second %2)) x (partition 2 xs)))
+
+;#143
+(fn [a b]
+  (apply + (map * a b)))
+
+;#146
+(fn into-table
+  ([prefix value]
+    (if (map? value)
+      (reduce (fn [m [k v]] (merge m (into-table (conj prefix k) v))) {} value)
+      {prefix value}))
+  ([value]
+    (into-table [] value)))
+
+;#147
+(fn [xs] (iterate #(map +' (concat [0] %) (concat % [0])) xs))
+
+;#153
+#(= (apply + (map count %)) (count (reduce into %)))
+
+;#157
+#(map vector % (range))
+
+;#166
+#(cond
+  (% %2 %3) :lt
+  (% %3 %2) :gt
+  :else     :eq)
+
+;#173
+f xs
