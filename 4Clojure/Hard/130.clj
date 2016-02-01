@@ -1,22 +1,14 @@
 (fn [x tr]
-  (let [abandon-child (fn [[root & offspring] ch]
-                        (cons root (remove #(= ch (first %)) offspring)))
-        subtree (fn [[root & offspring] ch]
-                  (first (filter #(= ch (first %)) offspring)))
-        adopt-child #(concat % [%2])
-        p-dict
+  (let [p-dict
           (loop [d {} forest [tr]]
             (if (empty? forest) d
-              (recur
-                (reduce #(let [[p & ch] %2] 
-                          (if (nil? ch) %
-                            (into % (map vector (map first ch) (repeat p)))))
-                  d forest)
-                (mapcat rest forest))))
-        chain (take-while identity (iterate p-dict x))
-        top-down
-          (fn [tr xs]
-            (if (empty? xs) tr
-              (let [[x & x_] xs]
-                (recur (adopt-child (subtree tr x) (abandon-child tr x)) x_))))]
-    (top-down tr (->> chain reverse rest))))
+              (recur (into d
+                        (for [t forest offs (rest t)] [(first offs) (first t)]))
+                (mapcat rest forest))))]
+    (loop [[r & offs :as t] tr
+           [c & c_] (->> x (iterate p-dict) (take-while identity) reverse rest)]
+      (if (nil? c) t
+        (let [in-path? #(= c (first %))
+              rest-tree (cons r (remove in-path? offs))
+              sub-tree (first (filter in-path? offs))]
+          (recur (concat sub-tree [rest-tree]) c_))))))
