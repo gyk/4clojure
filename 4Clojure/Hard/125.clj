@@ -1,0 +1,1 @@
+(fn [] (let [c (char 34) s "(fn [] (let [c (char 34) s %c%s%c] (format s c s c)))"] (format s c s c)))
